@@ -1,0 +1,50 @@
+# config.yaml
+# ==============================
+# Personal AI Coach Configuration
+# ==============================
+
+# 🔑 API Keys (or set as env vars)
+openai_api_key: "YOUR_OPENAI_KEY"
+telegram_token: "YOUR_TELEGRAM_BOT_TOKEN"
+telegram_chat_id: "YOUR_TELEGRAM_CHAT_ID"
+
+# 🌍 User Info
+user:
+  name: "Ali"
+  wake_time: "08:30"
+  gym_time: "18:00"
+  timezone: "America/New_York"
+
+# 🎯 Goals (weekly themes → used by Planner)
+goals:
+  - pillar: "Connection"
+    description: "Reach out to 3 professional contacts this week"
+  - pillar: "Curiosity"
+    description: "Complete 2 hours of AI/ML learning"
+  - pillar: "Presence"
+    description: "Maintain morning journaling ritual at least 5 days"
+  - pillar: "Contribution"
+    description: "Publish 1 LinkedIn post on Bridgit Social progress"
+
+# 📅 Schedule (daily automation)
+schedule:
+  morning_brief: "07:30"    # Generate daily plan
+  evening_reflect: "21:00"  # Summarize day, update journal
+  weekly_review: "Sunday 20:00"  # Weekly OKR alignment
+
+# ⚙️ Agent Options
+agents:
+  planner:
+    max_tasks_per_day: 5
+    max_priority_one: 3
+  scheduler:
+    respect_gym: true
+    deep_work_morning: true
+  reflector:
+    mood_tracking: true
+    gratitude_prompt: true
+
+# 💾 Storage
+storage:
+  database: "data/store.sqlite"
+  vector_store: "data/chroma"
