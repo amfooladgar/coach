@@ -118,13 +118,13 @@ Schedule runs with cron (Linux/macOS):
 
 ## 🛠 Roadmap
 
-- [x] Morning Planner → Daily Brief (Telegram delivery)  
-- [x] Reflector Agent → Evening journaling, insights, mood, gratitude, carry-over actions  
-- [ ] Scheduler Agent → Auto-map tasks to calendar (respecting gym, sleep, work blocks)  
-- [ ] RAG Integration → Query personal notes/docs in Chroma  
-- [ ] Weekly/Monthly OKR Tracking → Align tasks with quarterly objectives  
-- [ ] Dashboard → Web/Notion-based overview of progress and mood trends  
-- [ ] Analytics → Track habits, average mood, and goal completion rates  
+- [x] ✅ Morning Planner → Daily Brief (Telegram delivery)  
+- [x] ✅ Reflector Agent → Evening journaling, insights, mood, gratitude, carry-over actions  
+- [ ] 🔜 Scheduler Agent → Auto-map tasks to calendar (respecting gym, sleep, work blocks)  
+- [ ] 🔜 RAG Integration → Query personal notes/docs in Chroma  
+- [ ] 🔜 Weekly/Monthly OKR Tracking → Align tasks with quarterly objectives  
+- [ ] 🔜 Dashboard → Web/Notion-based overview of progress and mood trends  
+- [ ] 🔜 Analytics → Track habits, average mood, and goal completion rates  
 
 
 ## 💰 Cost Estimate
