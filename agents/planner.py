@@ -4,6 +4,7 @@ import json
 import uuid
 import datetime
 import os
+import sqlite3
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from data.schemas import Task
@@ -50,14 +51,43 @@ def _normalize_values(t: dict) -> dict:
         "deps": t.get("deps") or [],
         "status": t.get("status") if t.get("status") in allowed_status else "todo",
         "artifact_link": t.get("artifact_link"),
+        "source": t.get("source", "goal"),
     }
 
 
-def plan_tasks(goals: list) -> list[Task]:
-    """Generate tasks from goals using the LLM and map them into Task schema."""
+def _get_yesterdays_actions(db_path="data/store.sqlite") -> list[str]:
+    """Fetch actionable lessons from yesterday's reflection (if any)."""
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(
+        "CREATE TABLE IF NOT EXISTS journal (date TEXT PRIMARY KEY, summary TEXT, insights TEXT, actions TEXT, created_at TEXT)"
+    )
+    yesterday = (datetime.date.today() - datetime.timedelta(days=1)).isoformat()
+    cur.execute(
+        "SELECT actions FROM journal WHERE date = ? ORDER BY created_at DESC LIMIT 1",
+        (yesterday,),
+    )
+
+    row = cur.fetchone()
+    conn.close()
+    if row and row[0]:
+        return [row[0]]
+    return []
+
+
+def plan_tasks(goals: list, db_path="data/store.sqlite") -> list[Task]:
+    """Generate tasks from goals + yesterday’s actions using the LLM and map into Task schema."""
+
+    yest_actions = _get_yesterdays_actions(db_path)
 
     prompt = f"""
-    You are the Planner. Convert these weekly goals into <=5 tasks for today.
+    You are the Planner. Convert these weekly goals and yesterday's actions into <=5 tasks for today.
+
+    Weekly Goals:
+    {goals}
+
+    Yesterday’s Actions (from reflections):
+    {yest_actions}
 
     Each task must strictly follow this JSON schema:
 
@@ -76,9 +106,10 @@ def plan_tasks(goals: list) -> list[Task]:
       "artifact_link": null
     }}
 
-    Goals: {goals}
-
-    Return ONLY a valid JSON list of Task objects.
+    Rules:
+    - Tasks that directly come from Yesterday’s Actions must include `"source": "reflection"`.
+    - Tasks that come from Weekly Goals must include `"source": "goal"`.
+    - Return ONLY a valid JSON list of Task objects.
     """
 
     result = llm.invoke(prompt)

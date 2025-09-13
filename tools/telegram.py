@@ -6,6 +6,9 @@ from telegram import Bot
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
+MAX_LEN = 4096  # Telegram hard limit
+
+
 def send_message(text: str):
     if not TELEGRAM_TOKEN or not CHAT_ID:
         print("⚠️ Missing Telegram config, printing instead:\n", text)
@@ -13,9 +16,13 @@ def send_message(text: str):
 
     async def _send():
         bot = Bot(token=TELEGRAM_TOKEN)
-        await bot.send_message(chat_id=CHAT_ID, text=text, parse_mode="Markdown")
+        # Split into chunks if longer than Telegram’s max
+        for i in range(0, len(text), MAX_LEN):
+            chunk = text[i:i + MAX_LEN]
+            await bot.send_message(chat_id=CHAT_ID, text=chunk, parse_mode="Markdown")
 
     asyncio.run(_send())
+
 
 def debug_list_chats():
     """

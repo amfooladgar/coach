@@ -3,20 +3,27 @@
 # Personal AI Coach Configuration
 # ==============================
 
-# 🔑 API Keys (or set as env vars)
-openai_api_key: "YOUR_OPENAI_KEY"
-telegram_token: "YOUR_TELEGRAM_BOT_TOKEN"
-telegram_chat_id: "YOUR_TELEGRAM_CHAT_ID"
+# 🔑 LLM Settings
+llm:
+  provider: openai
+  default_model: gpt-4o-mini
+  planner_model: gpt-4o-mini
+  reflector_model: gpt-4o-mini
 
-# 🌍 User Info
+# 👤 User
 user:
   name: "Ali"
   wake_time: "08:30"
   gym_time: "18:00"
   timezone: "America/New_York"
+  preferred_work_blocks: ["09:00-11:30", "14:00-16:00"]
+  work_days: ["Mon", "Tue", "Wed", "Thu", "Fri"]
 
-# 🎯 Goals (weekly themes → used by Planner)
-goals:
+
+# 🎯 Goals
+quarterly_objectives:
+  - "Secure funding and partnerships for Bridgit"
+weekly_goals:
   - pillar: "Connection"
     description: "Reach out to 3 professional contacts this week"
   - pillar: "Curiosity"
@@ -25,12 +32,18 @@ goals:
     description: "Maintain morning journaling ritual at least 5 days"
   - pillar: "Contribution"
     description: "Publish 1 LinkedIn post on Bridgit Social progress"
+daily_habits:
+  - "Journal in the morning"
+  - "No emails before deep work"
+  - "Gym at 6 PM"
 
 # 📅 Schedule (daily automation)
 schedule:
   morning_brief: "07:30"    # Generate daily plan
   evening_reflect: "21:00"  # Summarize day, update journal
   weekly_review: "Sunday 20:00"  # Weekly OKR alignment
+  reminder_offsets:
+    reflection: 15   # minutes before
 
 # ⚙️ Agent Options
 agents:
@@ -43,8 +56,26 @@ agents:
   reflector:
     mood_tracking: true
     gratitude_prompt: true
+  writer:
+    format: markdown
+  networker:
+    nudges_per_week: 2
 
 # 💾 Storage
 storage:
   database: "data/store.sqlite"
   vector_store: "data/chroma"
+  backup_dir: "data/backups"
+  retention_days: 365
+
+# 📢 Delivery
+delivery:
+  telegram: true
+  slack: false
+  email: false
+  notion: false
+
+# 🛡 Safety
+safety:
+  max_tokens_per_run: 4000
+  confirm_calendar_changes: true

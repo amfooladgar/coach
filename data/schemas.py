@@ -16,3 +16,4 @@ class Task(BaseModel):
     deps: List[str] = []
     status: str = Field(..., pattern="^(todo|doing|done|blocked)$")
     artifact_link: Optional[str] = None
+    source: str = Field(default="goal", pattern="^(goal|reflection)$")
