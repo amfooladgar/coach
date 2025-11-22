@@ -6,10 +6,11 @@ import os
 from dotenv import load_dotenv
 
 from agents.planner import plan_tasks
+from agents.scheduler import schedule_tasks
 from agents.writer import format_daily_brief
 from agents.reflector import reflect_on_day
 from tools.telegram import send_message
-from tools.storage import init_db, save_tasks
+from tools.storage import init_db, save_tasks, save_calendar_events
 
 CONFIG_PATH = "config.yaml"
 
@@ -73,8 +74,12 @@ def run_morning(config):
     # Save to DB
     save_tasks(tasks, config["storage"]["database"])
 
-    # Daily brief
-    brief = format_daily_brief(config["user"], tasks)
+    # Schedule tasks to calendar blocks
+    schedule = schedule_tasks(tasks, config)
+    save_calendar_events(schedule, config["storage"]["database"])
+
+    # Daily brief with schedule
+    brief = format_daily_brief(config["user"], tasks, schedule)
 
     # Send
     if config.get("delivery", {}).get("telegram", False):  ### CHANGED: toggle delivery
